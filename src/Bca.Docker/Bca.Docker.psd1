@@ -23,7 +23,7 @@
     Copyright         = '(c) 2020 Bca. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'Module to manage Docker containers.'
+    Description       = 'PowerShell module to manage Docker containers.'
 
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '5.1'
