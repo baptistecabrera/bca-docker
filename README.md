@@ -5,9 +5,9 @@
 
 ## Description
 
-_Bca.Docker_ is a PowerShell module used to interract with DAC package.
+_Bca.Docker_ is a PowerShell module used to interact with Docker containers.
 
-It can be used to deploy and undeploy DACPAC.
+It can be used to remotely stop/start containers, or remotely invoke commands or script inside a container.
 
 ## Disclaimer
 
@@ -17,8 +17,19 @@ It can be used to deploy and undeploy DACPAC.
 
 ## Dependencies
 
-- Although it is not a dependency, `Invoke-SqlCmd` (from either [SqlServer](https://docs.microsoft.com/en-us/powershell/module/sqlserver/?view=sqlserver-ps) or [SQLPS](https://docs.microsoft.com/en-us/powershell/module/sqlps/?view=sqlserver-ps) PowerShell module) is used to determine if target database exists.
-- `Microsoft.SqlServer.Dac.dll` is required, and if [SqlServer](https://docs.microsoft.com/en-us/powershell/module/sqlserver/?view=sqlserver-ps) PowerShell module is installed, it will be dynamically discovered from it ; else you will have to specify its path with `Set-DacDllPath` before deploying or undeploying DACPAC.
+- _(none)_
+
+## Documentation
+Find extended documentation [at this page](doc/ReadMe.md).
+
+## How to install
+
+### The easiest way
+
+In a PowerShell console, run the following:
+```powershell
+Find-Module -Name Bca.Docker | Install-Module
+```
 
 ### Package
 
