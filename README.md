@@ -5,9 +5,9 @@
 
 ## Description
 
-_Bca.Docker_ is a PowerShell module used to interract with DAC package.
+_Bca.Docker_ is a PowerShell module used to interact with Docker containers.
 
-It can be used to deploy and undeploy DACPAC.
+It can be used to remotely stop/start containers, or remotely invoke commands or script inside a container.
 
 ## Disclaimer
 
@@ -17,8 +17,19 @@ It can be used to deploy and undeploy DACPAC.
 
 ## Dependencies
 
-- Although it is not a dependency, `Invoke-SqlCmd` (from either [SqlServer](https://docs.microsoft.com/en-us/powershell/module/sqlserver/?view=sqlserver-ps) or [SQLPS](https://docs.microsoft.com/en-us/powershell/module/sqlps/?view=sqlserver-ps) PowerShell module) is used to determine if target database exists.
-- `Microsoft.SqlServer.Dac.dll` is required, and if [SqlServer](https://docs.microsoft.com/en-us/powershell/module/sqlserver/?view=sqlserver-ps) PowerShell module is installed, it will be dynamically discovered from it ; else you will have to specify its path with `Set-DacDllPath` before deploying or undeploying DACPAC.
+- _(none)_
+
+## Documentation
+Find extended documentation [at this page](doc/ReadMe.md).
+
+## How to install
+
+### The easiest way
+
+In a PowerShell console, run the following:
+```powershell
+Find-Module -Name Bca.Docker | Install-Module
+```
 
 ### Package
 
@@ -45,9 +56,9 @@ _Please not that to date I am the only developper for this module._
 - If the CI succeeds and the packages are well pushed, the CD is triggered.
 
 ### CI
-[![Build Status](https://dev.azure.com/baptistecabrera/Bca/_apis/build/status/Build/Bca.Docker?repoName=bca-docker&branchName=master)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=20&repoName=bca-docker&branchName=master)
+[![Build Status](https://dev.azure.com/baptistecabrera/Bca/_apis/build/status/Build/Bca.Docker?repoName=bca-docker&branchName=master)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=30&repoName=bca-docker&branchName=master)
 
-[![Azure DevOps tests (branch)](https://img.shields.io/azure-devops/tests/baptistecabrera/Bca/27/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=27&repoName=bca-test&branchName=master) [![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/baptistecabrera/Bca/27/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=27&repoName=bca-test&branchName=master)
+[![Azure DevOps tests (branch)](https://img.shields.io/azure-devops/tests/baptistecabrera/Bca/30/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=30&repoName=bca-docker&branchName=master) [![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/baptistecabrera/Bca/30/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=30&repoName=bca-docker&branchName=master)
 
 The CI is an Azure DevOps build pipeline that will:
 - Test the module and does code coverage with _[Pester](https://pester.dev/)_;
@@ -55,9 +66,9 @@ The CI is an Azure DevOps build pipeline that will:
 - Mirror the repository to GitHub
 
 ### CD
-[![Build Status](https://dev.azure.com/baptistecabrera/Bca/_apis/build/status/Release/Bca.Docker?repoName=bca-docker&branchName=master)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=28&repoName=bca-docker&branchName=master)
+[![Build Status](https://dev.azure.com/baptistecabrera/Bca/_apis/build/status/Release/Bca.Docker?repoName=bca-docker&branchName=master)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=31&repoName=bca-docker&branchName=master)
 
-[![Azure DevOps tests (branch)](https://img.shields.io/azure-devops/tests/baptistecabrera/Bca/28/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=28&repoName=bca-test&branchName=master) [![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/baptistecabrera/Bca/28/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=28&repoName=bca-test&branchName=master)
+[![Azure DevOps tests (branch)](https://img.shields.io/azure-devops/tests/baptistecabrera/Bca/31/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=31&repoName=bca-docker&branchName=master) [![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/baptistecabrera/Bca/31/master?logo=azure-pipelines&logoColor=white)](https://dev.azure.com/baptistecabrera/Bca/_build/latest?definitionId=31&repoName=bca-docker&branchName=master)
 
 The CD is an Azure DevOps release pipeline is trigerred that will:
 - In a **Prerelease** step, install both Chocolatey and Nuget packages from the private feed in a container, and run tests again. If tests are successful, the packages are promoted to `@Prerelease` view inside the private feed;
