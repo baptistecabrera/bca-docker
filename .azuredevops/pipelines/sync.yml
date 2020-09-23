@@ -1,0 +1,29 @@
+parameters:
+- name: syncGitHub
+  displayName: Sync with GitHub
+  type: boolean
+  default: true
+
+trigger:
+- none
+
+resources:
+  pipelines:
+  - pipeline: Release
+    source: Release\Bca.Docker
+    trigger: 
+      branches:
+      - master
+  repositories:
+    - repository: build-tools
+      type: git
+      name: build-tools
+
+variables:
+- template: pipelines/azuredevops/variables/all.yml@build-tools
+
+
+stages: 
+- template: pipelines/azuredevops/pipeline-sync-repo.yml@build-tools
+  parameters:
+    syncGitHub: ${{ parameters.syncGitHub }}
