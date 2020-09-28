@@ -1,7 +1,7 @@
 # Bca.Docker
-![Platform](https://img.shields.io/powershellgallery/p/Bca.Docker?logo=powershell&logoColor=white) [![License: MIT](https://img.shields.io/github/license/baptistecabrera/bca-docker?logo=open-source-initiative&logoColor=white)](https://opensource.org/licenses/MIT)
+![Platform](https://img.shields.io/powershellgallery/p/Bca.Docker?logo=powershell&logoColor=white) [![License](https://img.shields.io/github/license/baptistecabrera/bca-docker?logo=open-source-initiative&logoColor=white)](https://opensource.org/licenses/MIT) [![Tag](https://img.shields.io/github/v/tag/baptistecabrera/bca-docker?logo=github&logoColor=white&label=tag)](https://github.com/baptistecabrera/bca-docker/releases)
 
-[![GitHub Release](https://img.shields.io/github/v/tag/baptistecabrera/bca-docker?logo=github&logoColor=white&label=release)](https://github.com/baptistecabrera/bca-docker/releases) [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/Bca.Docker?color=informational&logo=powershell&logoColor=white)](https://www.powershellgallery.com/packages/Bca.Docker) [![Nuget](https://img.shields.io/nuget/v/Bca.Docker?color=informational&logo=nuget&logoColor=white)](https://www.nuget.org/packages/Bca.Docker/) [![Chocolatey](https://img.shields.io/chocolatey/v/bca-docker?color=informational&logo=chocolatey&logoColor=white)](https://chocolatey.org/packages/bca-docker)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/Bca.Docker?color=informational&logo=powershell&logoColor=white)](https://www.powershellgallery.com/packages/Bca.Docker) [![Nuget](https://img.shields.io/nuget/v/Bca.Docker?color=informational&logo=nuget&logoColor=white)](https://www.nuget.org/packages/Bca.Docker/) [![Chocolatey](https://img.shields.io/chocolatey/v/bca-docker?color=informational&logo=chocolatey&logoColor=white)](https://chocolatey.org/packages/bca-docker) [![GitHub](https://img.shields.io/badge/dynamic/json?url=https://304e1aad263a8b23b4e14ef1714e6a54a183a0a5@nuget.pkg.github.com/baptistecabrera/Bca.Docker/index.json&label=github&query=$.items[:1].upper&logo=github&logoColor=white)](https://www.github.com/baptistecabrera/bca-docker/packages/)
 
 ## Description
 
@@ -12,6 +12,7 @@ It can be used to remotely stop/start containers, or remotely invoke commands or
 ## Disclaimer
 
 - _Bca.Docker_ has been created to answer my needs, but I provide it to people who may need such a tool.
+- Remoting must be enabled on the computer that hosts the containers.
 - It may contain bugs or lack some features, in this case, feel free to open an issue, and I'll manage it as best as I can.
 - This _GitHub_ repository is not the primary one, but you are welcome to contribute, see transparency for more information.
 
@@ -33,7 +34,7 @@ Find-Module -Name Bca.Docker | Install-Module
 
 ### Package
 
-_Bca.Docker_ is available as a package from _[PowerShell Gallery](https://www.powershellgallery.com/)_, _[NuGet](https://www.nuget.org/)_ and _[Chocolatey](https://chocolatey.org/)_*, please refer to each specific plateform on how to install the package.
+_Bca.Docker_ is available as a package from _[PowerShell Gallery](https://www.powershellgallery.com/packages/Bca.Docker)_, _[NuGet](https://www.nuget.org/packages/Bca.Docker/)_, _[GitHub](https://www.github.com/baptistecabrera/bca-docker/packages/)_ and _[Chocolatey](https://chocolatey.org/packages/bca-docker)_*, please refer to each specific plateform on how to install the package.
 
 \* Availability on Chocolatey is subject to approval.
 

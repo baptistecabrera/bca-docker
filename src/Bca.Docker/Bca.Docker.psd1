@@ -5,7 +5,7 @@
     RootModule        = 'Bca.Docker'
 
     # Version number of this module.
-    ModuleVersion     = '0.1.0'
+    ModuleVersion     = '0.2.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -108,7 +108,11 @@
             IconUri      = 'https://www.powershellgallery.com/Content/Images/Branding/packageDefaultIcon.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = '0.1.0:
+            ReleaseNotes = '0.2.0:
+- Added ShouldProcess support on some functions;
+- Added support for Authentication and Credential parameters.
+
+0.1.0:
 - Get-DockerContainer: function to retrieve docker informations;
 - Invoke-DockerContainerCommand: function to execute a command, script or script block in a docker container;
 - Start-DockerContainer/Stop-DockerConatainer: functions to start or stop a docke container;

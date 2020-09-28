@@ -26,6 +26,12 @@ function Invoke-DockerContainerCommand
         .PARAMETER JobName
             A string the name of the job if the command is run as a background job in the container. By default, jobs are named Job<n>, where <n> is an ordinal number.
             If you use the JobName parameter in a command, the command is run as a job, and Invoke-DockerContainerCommand returns a job object, even if you do not include AsJob in the command.
+        .PARAMETER Credential
+            A PSCredential used to connect to the host.
+        .PARAMETER Authentication
+            An AuthenticationMechanism that will be used to authenticate the user's credentials
+        .PARAMETER Force
+            A switch specifying whether or not to force the action.
         .INPUTS
             System.Management.Automation.PSCustomObject
             You can pipe a value for the containers to this cmdlet.
@@ -57,15 +63,15 @@ function Invoke-DockerContainerCommand
             -a----       2020-09-02   8:56 AM           4579 BackEndScript.ps1
             -a----       2020-09-02  11:25 AM           5979 FrontEndScript.ps1
 
-            Get-DockerContainer -Name "*BackEnd" -ComputerName MyHostServer | Invoke-DockerContainerCommand -FilePath C:\Scripts\BackEndScript.ps1 -RunAsAdministrator -RunAsJob
+            Get-DockerContainer -Name "*BackEnd" -ComputerName MyHostServer -Credential DOMAIN\MyUser -Authentication CredSSP | Invoke-DockerContainerCommand -FilePath C:\Scripts\BackEndScript.ps1 -RunAsAdministrator -RunAsJob
 
             Description
             -----------
-            This example will get all containers that match "*BackEnd" on computer MyHostServer and run the script C:\Scripts\BackEndScript.ps1 as administrator and as a job in each container.
+            This example will get all containers that match "*BackEnd" on computer MyHostServer, using DOMAIN\MyUser with CredSSP, and run the script C:\Scripts\BackEndScript.ps1 as administrator and as a job in each container.
         .NOTES
         .LINK
     #>
-    [CmdLetBinding()]
+    [CmdLetBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param(
         [Parameter(ParameterSetName = "FromContainerObjectAndCommand", Mandatory = $true, ValueFromPipeline = $true)]
         [Parameter(ParameterSetName = "FromContainerObjectAndScriptBlock", Mandatory = $true, ValueFromPipeline = $true)]
@@ -83,6 +89,7 @@ function Invoke-DockerContainerCommand
         [Parameter(ParameterSetName = "FromContainerIdAndScriptBlock", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromContainerIdAndFilePath", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromContainerIdAndExpression", Mandatory = $false)]
+        [Alias("Cn")]
         [string] $ComputerName = $env:COMPUTERNAME,
         [Parameter(ParameterSetName = "FromContainerObjectAndCommand", Mandatory = $true)]
         [Parameter(ParameterSetName = "FromContainerIdAndCommand", Mandatory = $true)]
@@ -92,6 +99,7 @@ function Invoke-DockerContainerCommand
         [Parameter(ParameterSetName = "FromContainerIdAndFilePath", Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [ValidateScript( { Test-Path $_ } )]
+        [Alias("PSPath")]
         [string] $FilePath,
         [Parameter(ParameterSetName = "FromContainerObjectAndExpression", Mandatory = $true)]
         [Parameter(ParameterSetName = "FromContainerIdAndExpression", Mandatory = $true)]
@@ -126,7 +134,35 @@ function Invoke-DockerContainerCommand
         [Parameter(ParameterSetName = "FromContainerIdAndScriptBlock", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromContainerIdAndFilePath", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromContainerIdAndExpression", Mandatory = $false)]
-        [string] $JobName
+        [string] $JobName,
+        [Parameter(ParameterSetName = "FromContainerObjectAndCommand", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndScriptBlock", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndFilePath", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndExpression", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndCommand", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndScriptBlock", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndFilePath", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndExpression", Mandatory = $false)]
+        [pscredential] $Credential,
+        [Parameter(ParameterSetName = "FromContainerObjectAndCommand", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndScriptBlock", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndFilePath", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndExpression", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndCommand", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndScriptBlock", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndFilePath", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndExpression", Mandatory = $false)]
+        [ValidateSet("Basic", "Default", "Credssp", "Digest", "Kerberos", "Negotiate", "NegotiateWithImplicitCredential")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism] $Authentication = "Default",
+        [Parameter(ParameterSetName = "FromContainerObjectAndCommand", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndScriptBlock", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndFilePath", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerObjectAndExpression", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndCommand", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndScriptBlock", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndFilePath", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromContainerIdAndExpression", Mandatory = $false)]
+        [switch] $Force
     )
 
     begin
@@ -141,6 +177,7 @@ function Invoke-DockerContainerCommand
             $PSBoundParameters.Remove("ContainerId") | Out-Null
             if ($PSBoundParameters.ComputerName) { $PSBoundParameters.Remove("ComputerName") | Out-Null }
         }
+        if ($PSBoundParameters.Force) { $PSBoundParameters.Remove("Force") | Out-Null }
     }
     process
     {
@@ -148,37 +185,53 @@ function Invoke-DockerContainerCommand
             $CurrentContainer = $_
             try 
             {
-                $Params = $PSBoundParameters
-                if ($Params.Container) { $Params.Remove("Container") | Out-Null }
-                $Params.ContainerId = $CurrentContainer.FullId
-                if ($Params.FilePath) { $Params.FilePath = Get-Content $Params.FilePath }
-                Invoke-Command -ComputerName $CurrentContainer.ComputerName -ScriptBlock {
-                    try
-                    {
-                        $Params = $using:Params
-                        if ($Params.Expression)
-                        {
-                            $Params.Add("Command", "Invoke-Expression `"$($Params.Expression)`"")
-                            $Params.Remove("Expression") | Out-Null
-                        }
-                        if ($Params.FilePath)
-                        {
-                            $FilePath = (Join-Path $env:TEMP ("{0}.ps1" -f (New-Guid).ToString()))
-                            $Params.FilePath | Set-Content $FilePath
-                            $Params.FilePath = $FilePath
-                        }
-                        if ($Params.Command) { $Params.Command = [scriptblock]::Create($Params.Command -join ";") }
-                        if ($Params.ScriptBlock) { $Params.ScriptBlock = [scriptblock]::Create($Params.ScriptBlock) }
+                $FirstHopParameters = @{
+                    ComputerName = $CurrentContainer.ComputerName
+                }
+                if ($PSBoundParameters.Credential) { $FirstHopParameters.Add("Credential", $Credential) }
+                if ($PSBoundParameters.Authentication) { $FirstHopParameters.Add("Authentication", $Authentication) }
 
-                        Invoke-Command @Params     
-                    }
-                    catch
-                    {
-                        Write-Error $_
-                    }
-                    finally 
-                    {
-                        if ($Params.FilePath) { Remove-Item $Params.FilePath -Force -ErrorAction SilentlyContinue }
+                $SecondHopParameters = $PSBoundParameters
+                if ($SecondHopParameters.Container) { $SecondHopParameters.Remove("Container") | Out-Null }
+                $SecondHopParameters.ContainerId = $CurrentContainer.FullId
+                if ($SecondHopParameters.FilePath) { $SecondHopParameters.FilePath = Get-Content $SecondHopParameters.FilePath }
+                if ($SecondHopParameters.Credential) { $SecondHopParameters.Remove("Credential") | Out-Null }
+                if ($SecondHopParameters.Authentication) { $SecondHopParameters.Remove("Authentication") | Out-Null }
+                if ($SecondHopParameters.WhatIf) { $SecondHopParameters.Remove("WhatIf") | Out-Null }
+                if ($SecondHopParameters.Confirm) { $SecondHopParameters.Remove("Confirm") | Out-Null }
+                if ($CurrentContainer.Name) { $Target = $CurrentContainer.Name }
+                else { $Target = $CurrentContainer.FullId }
+
+                if ($Force -or $PSCmdlet.ShouldProcess($Target))
+                {
+                    Invoke-Command @FirstHopParameters -ScriptBlock {
+                        try
+                        {
+                            $SecondHopParameters = $using:SecondHopParameters
+                            if ($SecondHopParameters.Expression)
+                            {
+                                $SecondHopParameters.Add("Command", "Invoke-Expression `"$($SecondHopParameters.Expression)`"")
+                                $SecondHopParameters.Remove("Expression") | Out-Null
+                            }
+                            if ($SecondHopParameters.FilePath)
+                            {
+                                $FilePath = (Join-Path $env:TEMP ("{0}.ps1" -f (New-Guid).ToString()))
+                                $SecondHopParameters.FilePath | Set-Content $FilePath
+                                $SecondHopParameters.FilePath = $FilePath
+                            }
+                            if ($SecondHopParameters.Command) { $SecondHopParameters.Command = [scriptblock]::Create($SecondHopParameters.Command -join ";") }
+                            if ($SecondHopParameters.ScriptBlock) { $SecondHopParameters.ScriptBlock = [scriptblock]::Create($SecondHopParameters.ScriptBlock) }
+
+                            Invoke-Command @SecondHopParameters     
+                        }
+                        catch
+                        {
+                            Write-Error $_
+                        }
+                        finally 
+                        {
+                            if ($SecondHopParameters.FilePath) { Remove-Item $SecondHopParameters.FilePath -Force -ErrorAction SilentlyContinue }
+                        }
                     }
                 }
             }
