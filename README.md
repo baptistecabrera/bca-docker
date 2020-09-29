@@ -12,7 +12,7 @@ It can be used to remotely stop/start containers, or remotely invoke commands or
 ## Disclaimer
 
 - _Bca.Docker_ has been created to answer my needs, but I provide it to people who may need such a tool.
-- Remoting must be enabled on the computer that hosts the containers.
+- Remoting must be enabled and PowerShell installed on both the computer that hosts the containers, and the target containers.
 - It may contain bugs or lack some features, in this case, feel free to open an issue, and I'll manage it as best as I can.
 - This _GitHub_ repository is not the primary one, but you are welcome to contribute, see transparency for more information.
 
