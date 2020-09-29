@@ -82,7 +82,7 @@ Describe $global:TestLocalizedData.StopDocker.Describe {
     It $global:TestLocalizedData.StopDocker.FromId {
         try
         {
-            Stop-DockerContainer -Name $Id -ComputerName $Server -Credential $Credential -WhatIf
+            Stop-DockerContainer -Id $Id -ComputerName $Server -Credential $Credential -WhatIf
             $Result = $true
         }
         catch { $Result = $false }
@@ -92,7 +92,7 @@ Describe $global:TestLocalizedData.StopDocker.Describe {
     It $global:TestLocalizedData.StopDocker.FromId {
         try
         {
-            Stop-DockerContainer -Name $Ids -ComputerName $Servers -WhatIf
+            Stop-DockerContainer -Id $Ids -ComputerName $Servers -WhatIf
             $Result = $true
         }
         catch { $Result = $false }
@@ -174,7 +174,7 @@ Describe $global:TestLocalizedData.StartDocker.Describe {
     It $global:TestLocalizedData.StartDocker.FromId {
         try
         {
-            Start-DockerContainer -Name $Id -ComputerName $Server -Credential $Credential -WhatIf
+            Start-DockerContainer -Id $Id -ComputerName $Server -Credential $Credential -WhatIf
             $Result = $true
         }
         catch { $Result = $false }
@@ -184,7 +184,7 @@ Describe $global:TestLocalizedData.StartDocker.Describe {
     It $global:TestLocalizedData.StartDocker.FromId {
         try
         {
-            Start-DockerContainer -Name $Ids -ComputerName $Servers -WhatIf
+            Start-DockerContainer -Id $Ids -ComputerName $Servers -WhatIf
             $Result = $true
         }
         catch { $Result = $false }
