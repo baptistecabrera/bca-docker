@@ -10,11 +10,11 @@ Gets a Docker container.
 ## Syntax
 ### FromName (default)
 ```powershell
-Get-DockerContainer [-ComputerName <string[]>] [-Name <string[]>] [-IncludeExtendedProperties] [<CommonParameters>]
+Get-DockerContainer [-ComputerName <string[]>] [-Name <string[]>] [-IncludeExtendedProperties] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [<CommonParameters>]
 ```
 ### FromId
 ```powershell
-Get-DockerContainer [-ComputerName <string[]>] [-Id <string[]>] [-IncludeExtendedProperties] [<CommonParameters>]
+Get-DockerContainer [-ComputerName <string[]>] [-Id <string[]>] [-IncludeExtendedProperties] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [<CommonParameters>]
 ```
 ## Examples
 ### Example 1
@@ -34,8 +34,8 @@ Am array of string containing the computer(s) where the containers are hosted.
 | | |
 |:-|:-|
 |Type:|String[]|
-|Aliases|CN|
-|Default value:|$env:COMPUTERNAME|
+|Aliases|Cn|
+|Default value:|`$env:COMPUTERNAME`|
 |Parameter sets:|FromId, FromName|
 |Position:|Named|
 |Required:|False|
@@ -72,13 +72,41 @@ A switch specifying whether or not to retrieve extended properties.
 | | |
 |:-|:-|
 |Type:|SwitchParameter|
-|Default value:|False|
+|Default value:|`False`|
 |Parameter sets:|FromName, FromId|
 |Position:|Named|
 |Required:|False|
 |Accepts pipepline input:|False|
 
+### `-Credential`
+A PSCredential used to connect to the host.
+
+| | |
+|:-|:-|
+|Type:|PSCredential|
+|Parameter sets:|FromName, FromId|
+|Position:|Named|
+|Required:|False|
+|Accepts pipepline input:|False|
+
+### `-Authentication`
+An AuthenticationMechanism that will be used to authenticate the user's credentials
+
+| | |
+|:-|:-|
+|Type:|AuthenticationMechanism|
+|Default value:|`Default`|
+|Parameter sets:|FromName, FromId|
+|Position:|Named|
+|Required:|False|
+|Accepts pipepline input:|False|
+|Validation (ValidValues):|Basic, Default, Credssp, Digest, Kerberos, Negotiate, NegotiateWithImplicitCredential|
+
+### `-<CommonParameters>`
+This command supports the common parameters: Verbose, Debug, ErrorAction, ErrorVariable, WarningAction, WarningVariable, OutBuffer, PipelineVariable, and OutVariable.
+For more information, see [about_CommonParameters](https:/go.microsoft.com/fwlink/?LinkID=113216).
 ## Outputs
+
 **System.Management.Automation.PSCustomObject**
 
 Returns a PSCustomObject containing the containers.

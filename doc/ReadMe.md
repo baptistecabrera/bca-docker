@@ -1,9 +1,9 @@
-# Bca.Docker `0.1.0`
+# Bca.Docker `0.2.0`
 Tags: `container` `docker` `Linux` `MacOS` `Windows`
 
 Minimum PowerShell version: `5.1`
 
-Module to manage Docker containers.
+PowerShell module to manage Docker containers.
 
 ## Commands
 - [Get-DockerContainer](commands/Get-DockerContainer.md)
@@ -12,6 +12,10 @@ Module to manage Docker containers.
 - [Stop-DockerContainer](commands/Stop-DockerContainer.md)
 
 ## Release Notes
+0.2.0:
+- Added ShouldProcess support on some functions;
+- Added support for Authentication and Credential parameters.
+
 0.1.0:
 - Get-DockerContainer: function to retrieve docker informations;
 - Invoke-DockerContainerCommand: function to execute a command, script or script block in a docker container;
