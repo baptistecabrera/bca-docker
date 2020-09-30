@@ -10,35 +10,35 @@ Invokes a command inside a Docker container.
 ## Syntax
 ### FromContainerObjectAndExpression
 ```powershell
-Invoke-DockerContainerCommand -Container <psobject[]> -Expression <string> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -Container <psobject[]> -Expression <string> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainerObjectAndFilePath
 ```powershell
-Invoke-DockerContainerCommand -Container <psobject[]> -FilePath <string> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -Container <psobject[]> -FilePath <string> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainerObjectAndScriptBlock
 ```powershell
-Invoke-DockerContainerCommand -Container <psobject[]> -ScriptBlock <scriptblock> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -Container <psobject[]> -ScriptBlock <scriptblock> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainerObjectAndCommand
 ```powershell
-Invoke-DockerContainerCommand -Container <psobject[]> -Command <string[]> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -Container <psobject[]> -Command <string[]> [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainerIdAndExpression
 ```powershell
-Invoke-DockerContainerCommand -ContainerId <string> -Expression <string> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -ContainerId <string> -Expression <string> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainerIdAndFilePath
 ```powershell
-Invoke-DockerContainerCommand -ContainerId <string> -FilePath <string> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -ContainerId <string> -FilePath <string> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainerIdAndScriptBlock
 ```powershell
-Invoke-DockerContainerCommand -ContainerId <string> -ScriptBlock <scriptblock> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -ContainerId <string> -ScriptBlock <scriptblock> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainerIdAndCommand
 ```powershell
-Invoke-DockerContainerCommand -ContainerId <string> -Command <string[]> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [<CommonParameters>]
+Invoke-DockerContainerCommand -ContainerId <string> -Command <string[]> [-ComputerName <string>] [-RunAsAdministrator] [-AsJob] [-JobName <string>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ## Examples
 ### Example 1
@@ -66,10 +66,10 @@ Mode                LastWriteTime         Length Name
 -a----       2020-09-02   8:56 AM           4579 BackEndScript.ps1
 -a----       2020-09-02  11:25 AM           5979 FrontEndScript.ps1
 
-Get-DockerContainer -Name "*BackEnd" -ComputerName MyHostServer | Invoke-DockerContainerCommand -FilePath C:\Scripts\BackEndScript.ps1 -RunAsAdministrator -RunAsJob
+Get-DockerContainer -Name "*BackEnd" -ComputerName MyHostServer -Credential DOMAIN\MyUser -Authentication CredSSP | Invoke-DockerContainerCommand -FilePath C:\Scripts\BackEndScript.ps1 -RunAsAdministrator -RunAsJob
 
 ```
-This example will get all containers that match "*BackEnd" on computer MyHostServer and run the script C:\Scripts\BackEndScript.ps1 as administrator and as a job in each container.
+This example will get all containers that match "*BackEnd" on computer MyHostServer, using DOMAIN\MyUser with CredSSP, and run the script C:\Scripts\BackEndScript.ps1 as administrator and as a job in each container.
 ## Parameters
 ### `-Container`
 An array of pscustomobjects containing the container(s) where the command will be run.
@@ -101,7 +101,8 @@ An array of string containing the computer(s) where the containers are hosted.
 | | |
 |:-|:-|
 |Type:|String|
-|Default value:|$env:COMPUTERNAME|
+|Aliases|Cn|
+|Default value:|`$env:COMPUTERNAME`|
 |Parameter sets:|FromContainerIdAndExpression, FromContainerIdAndFilePath, FromContainerIdAndScriptBlock, FromContainerIdAndCommand|
 |Position:|Named|
 |Required:|False|
@@ -124,6 +125,7 @@ A string containing the path of a local powershell script to run in the containe
 | | |
 |:-|:-|
 |Type:|String|
+|Aliases|PSPath|
 |Parameter sets:|FromContainerIdAndFilePath, FromContainerObjectAndFilePath|
 |Position:|Named|
 |Required:|True|
@@ -158,7 +160,7 @@ A switch sepcifying wheter or not this cmdlet invokes a command as an Administra
 | | |
 |:-|:-|
 |Type:|SwitchParameter|
-|Default value:|False|
+|Default value:|`False`|
 |Parameter sets:|FromContainerIdAndExpression, FromContainerIdAndFilePath, FromContainerIdAndScriptBlock, FromContainerIdAndCommand, FromContainerObjectAndExpression, FromContainerObjectAndFilePath, FromContainerObjectAndScriptBlock, FromContainerObjectAndCommand|
 |Position:|Named|
 |Required:|False|
@@ -170,7 +172,7 @@ A switch specifying whether or not to run the command as a background job in the
 | | |
 |:-|:-|
 |Type:|SwitchParameter|
-|Default value:|False|
+|Default value:|`False`|
 |Parameter sets:|FromContainerIdAndExpression, FromContainerIdAndFilePath, FromContainerIdAndScriptBlock, FromContainerIdAndCommand, FromContainerObjectAndExpression, FromContainerObjectAndFilePath, FromContainerObjectAndScriptBlock, FromContainerObjectAndCommand|
 |Position:|Named|
 |Required:|False|
@@ -188,11 +190,56 @@ If you use the JobName parameter in a command, the command is run as a job, and 
 |Required:|False|
 |Accepts pipepline input:|False|
 
+### `-Credential`
+A PSCredential used to connect to the host.
+
+| | |
+|:-|:-|
+|Type:|PSCredential|
+|Parameter sets:|FromContainerIdAndExpression, FromContainerIdAndFilePath, FromContainerIdAndScriptBlock, FromContainerIdAndCommand, FromContainerObjectAndExpression, FromContainerObjectAndFilePath, FromContainerObjectAndScriptBlock, FromContainerObjectAndCommand|
+|Position:|Named|
+|Required:|False|
+|Accepts pipepline input:|False|
+
+### `-Authentication`
+An AuthenticationMechanism that will be used to authenticate the user's credentials
+
+| | |
+|:-|:-|
+|Type:|AuthenticationMechanism|
+|Default value:|`Default`|
+|Parameter sets:|FromContainerIdAndExpression, FromContainerIdAndFilePath, FromContainerIdAndScriptBlock, FromContainerIdAndCommand, FromContainerObjectAndExpression, FromContainerObjectAndFilePath, FromContainerObjectAndScriptBlock, FromContainerObjectAndCommand|
+|Position:|Named|
+|Required:|False|
+|Accepts pipepline input:|False|
+|Validation (ValidValues):|Basic, Default, Credssp, Digest, Kerberos, Negotiate, NegotiateWithImplicitCredential|
+
+### `-Force`
+A switch specifying whether or not to force the action.
+
+| | |
+|:-|:-|
+|Type:|SwitchParameter|
+|Default value:|`False`|
+|Parameter sets:|FromContainerIdAndExpression, FromContainerIdAndFilePath, FromContainerIdAndScriptBlock, FromContainerIdAndCommand, FromContainerObjectAndExpression, FromContainerObjectAndFilePath, FromContainerObjectAndScriptBlock, FromContainerObjectAndCommand|
+|Position:|Named|
+|Required:|False|
+|Accepts pipepline input:|False|
+
+### `-WhatIf`
+This command supports the WhatIf parameter to simulate the action before executing it.
+### `-Confirm`
+This command supports the Confirm parameter to require a user confirmation before executing it.
+### `-<CommonParameters>`
+This command supports the common parameters: Verbose, Debug, ErrorAction, ErrorVariable, WarningAction, WarningVariable, OutBuffer, PipelineVariable, and OutVariable.
+For more information, see [about_CommonParameters](https:/go.microsoft.com/fwlink/?LinkID=113216).
 ## Inputs
+
 **System.Management.Automation.PSCustomObject**
 
 You can pipe a value for the containers to this cmdlet.
 ## Outputs
+
 **System.Management.Automation.PSRemotingJob, or the output of the invoked command**
 
 This cmdlet returns a job object, if you use the AsJob parameter. Otherwise, it returns the output of the invoked command, which is the value of the ScriptBlock parameter.

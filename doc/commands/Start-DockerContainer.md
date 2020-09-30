@@ -10,15 +10,15 @@ Starts a Docker container.
 ## Syntax
 ### FromName (default)
 ```powershell
-Start-DockerContainer [-ComputerName <string[]>] [-Name <string[]>] [-Force] [<CommonParameters>]
+Start-DockerContainer [-ComputerName <string[]>] [-Name <string[]>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromContainer
 ```powershell
-Start-DockerContainer -Container <psobject[]> [-Force] [<CommonParameters>]
+Start-DockerContainer -Container <psobject[]> [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ### FromId
 ```powershell
-Start-DockerContainer [-ComputerName <string[]>] [-Id <string[]>] [-Force] [<CommonParameters>]
+Start-DockerContainer [-ComputerName <string[]>] [-Id <string[]>] [-Credential <pscredential>] [-Authentication <AuthenticationMechanism>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 ## Examples
 ### Example 1
@@ -49,7 +49,8 @@ An array of string containing the computer(s) where the containers are hosted.
 | | |
 |:-|:-|
 |Type:|String[]|
-|Default value:|$env:COMPUTERNAME|
+|Aliases|Cn|
+|Default value:|`$env:COMPUTERNAME`|
 |Parameter sets:|FromId, FromName|
 |Position:|Named|
 |Required:|False|
@@ -80,23 +81,56 @@ This parameter accepts wildcard character ('*').
 |Required:|False|
 |Accepts pipepline input:|False|
 
+### `-Credential`
+A PSCredential used to connect to the host.
+
+| | |
+|:-|:-|
+|Type:|PSCredential|
+|Parameter sets:|FromName, FromId, FromContainer|
+|Position:|Named|
+|Required:|False|
+|Accepts pipepline input:|False|
+
+### `-Authentication`
+An AuthenticationMechanism that will be used to authenticate the user's credentials
+
+| | |
+|:-|:-|
+|Type:|AuthenticationMechanism|
+|Default value:|`Default`|
+|Parameter sets:|FromName, FromId, FromContainer|
+|Position:|Named|
+|Required:|False|
+|Accepts pipepline input:|False|
+|Validation (ValidValues):|Basic, Default, Credssp, Digest, Kerberos, Negotiate, NegotiateWithImplicitCredential|
+
 ### `-Force`
 A switch specifying whether or not to force the action.
 
 | | |
 |:-|:-|
 |Type:|SwitchParameter|
-|Default value:|False|
+|Default value:|`False`|
 |Parameter sets:|FromName, FromId, FromContainer|
 |Position:|Named|
 |Required:|False|
 |Accepts pipepline input:|False|
 
+### `-WhatIf`
+This command supports the WhatIf parameter to simulate the action before executing it.
+### `-Confirm`
+This command supports the Confirm parameter to require a user confirmation before executing it.
+### `-<CommonParameters>`
+This command supports the common parameters: Verbose, Debug, ErrorAction, ErrorVariable, WarningAction, WarningVariable, OutBuffer, PipelineVariable, and OutVariable.
+For more information, see [about_CommonParameters](https:/go.microsoft.com/fwlink/?LinkID=113216).
 ## Inputs
+
 **System.Management.Automation.PSCustomObject**
 
 You can pipe a value for the containers to this cmdlet.
 ## Outputs
+
 **System.Management.Automation.PSCustomObject**
 
 Returns a PSCustomObject containing the containers.

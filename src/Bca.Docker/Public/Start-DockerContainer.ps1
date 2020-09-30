@@ -16,6 +16,10 @@ function Start-DockerContainer
             An array of pscustomobjects containing the containers to start.
         .PARAMETER ComputerName
             An array of string containing the computer(s) where the containers are hosted.
+        .PARAMETER Credential
+            A PSCredential used to connect to the host.
+        .PARAMETER Authentication
+            An AuthenticationMechanism that will be used to authenticate the user's credentials
         .PARAMETER Force
             A switch specifying whether or not to force the action.
         .INPUTS
@@ -41,17 +45,27 @@ function Start-DockerContainer
         .LINK
             Stop-DockerContainer
     #>
-    [CmdLetBinding(DefaultParameterSetName = "FromName")]
+    [CmdLetBinding(DefaultParameterSetName = "FromName", SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param(
         [Parameter(ParameterSetName = "FromContainer", Mandatory = $true, ValueFromPipeline = $true)]
         [pscustomobject[]] $Container,
         [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
+        [Alias("Cn")]
         [string[]] $ComputerName = $env:COMPUTERNAME,
         [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
         [string[]] $Name = "",
         [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
         [string[]] $Id = "",
+        [Parameter(ParameterSetName = "FromContainer", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
+        [pscredential] $Credential,
+        [Parameter(ParameterSetName = "FromContainer", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
+        [ValidateSet("Basic", "Default", "Credssp", "Digest", "Kerberos", "Negotiate", "NegotiateWithImplicitCredential")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism] $Authentication = "Default",
         [Parameter(ParameterSetName = "FromContainer", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
@@ -61,7 +75,13 @@ function Start-DockerContainer
     begin { Write-Debug ($script:LocalizedData.Global.Debug.Entering -f $PSCmdlet.MyInvocation.MyCommand) }
     process
     {
-        try { Control-DockerContainer @PSBoundParameters -Action "Start" }
+        switch -Regex ($PSCmdlet.ParameterSetName)
+        {
+            "FromContainer" { $Target = $Container.Name -join ", " }
+            "FromId" { $Target = $Id -join ", " }
+            "FromName" { $Target = $Name -join ", " }
+        }
+        try { if ($Force -or $PSCmdlet.ShouldProcess($Target)) { Control-DockerContainer @PSBoundParameters -Action "Start" } }
         catch { Write-Error $_ }
     }
     end { Write-Debug ($script:LocalizedData.Global.Debug.Leaving -f $PSCmdlet.MyInvocation.MyCommand) }

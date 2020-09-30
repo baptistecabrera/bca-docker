@@ -16,6 +16,10 @@ function Get-DockerContainer
             Am array of string containing the computer(s) where the containers are hosted.
         .PARAMETER IncludeExtendedProperties
             A switch specifying whether or not to retrieve extended properties.
+        .PARAMETER Credential
+            A PSCredential used to connect to the host.
+        .PARAMETER Authentication
+            An AuthenticationMechanism that will be used to authenticate the user's credentials
         .OUTPUTS
             System.Management.Automation.PSCustomObject
             Returns a PSCustomObject containing the containers.
@@ -38,7 +42,7 @@ function Get-DockerContainer
     param(
         [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
-        [Alias("CN")]
+        [Alias("Cn")]
         [string[]] $ComputerName = $env:COMPUTERNAME,
         [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
         [string[]] $Name = "",
@@ -46,7 +50,14 @@ function Get-DockerContainer
         [string[]] $Id = "",
         [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
-        [switch] $IncludeExtendedProperties
+        [switch] $IncludeExtendedProperties,
+        [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
+        [pscredential] $Credential,
+        [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
+        [ValidateSet("Basic", "Default", "Credssp", "Digest", "Kerberos", "Negotiate", "NegotiateWithImplicitCredential")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism] $Authentication = "Default"
     )
 
     Write-Debug ($script:LocalizedData.Global.Debug.Entering -f $PSCmdlet.MyInvocation.MyCommand)
@@ -54,7 +65,12 @@ function Get-DockerContainer
     {
         $ComputerName | ForEach-Object { 
             $CurrentComputerName = $_
-            Invoke-Command -ComputerName $CurrentComputerName -ScriptBlock { Invoke-Expression "docker ps -a --no-trunc" } | Where-Object { ($_ -notlike "CONTAINER ID*") } | ForEach-Object {
+            $Parameters = @{
+                ComputerName = $CurrentComputerName
+            }
+            if ($PSBoundParameters.Credential) { $Parameters.Add("Credential", $Credential) }
+            if ($PSBoundParameters.Authentication) { $Parameters.Add("Authentication", $Authentication) }
+            Invoke-Command @Parameters -ScriptBlock { Invoke-Expression "docker ps -a --no-trunc" } | Where-Object { ($_ -notlike "CONTAINER ID*") } | ForEach-Object {
                 $CurrentContainer = New-Object -TypeName PsObject
                 $ContainerProperties = $_ -split "  " | Where-Object { $_ } | ForEach-Object {
                     if ($_.StartsWith(" ")) { $_ = $_.SubString(1) }
@@ -76,7 +92,7 @@ function Get-DockerContainer
                 {
                     if ($IncludeExtendedProperties)
                     {
-                        $ExtendedProperties = Invoke-Command -ComputerName $CurrentComputerName -ScriptBlock {
+                        $ExtendedProperties = Invoke-Command @Parameters -ScriptBlock {
                             param([string] $ContainerId)
                             Invoke-Expression "docker inspect $ContainerId"
                         } -ArgumentList $CurrentContainer.Id 

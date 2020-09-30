@@ -18,6 +18,10 @@ function Control-DockerContainer
             An array of string containing the computer(s) where the containers are hosted.
         .PARAMETER Action
             A string containing the action to perform on the conatiner(s).
+        .PARAMETER Credential
+            A PSCredential used to connect to the host.
+        .PARAMETER Authentication
+            An AuthenticationMechanism that will be used to authenticate the user's credentials
         .PARAMETER Force
             A switch specifying whether or not to force the action.
         .INPUTS
@@ -64,6 +68,15 @@ function Control-DockerContainer
         [Parameter(ParameterSetName = "FromContainer", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
         [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
+        [pscredential] $Credential,
+        [Parameter(ParameterSetName = "FromContainer", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
+        [ValidateSet("Basic", "Default", "Credssp", "Digest", "Kerberos", "Negotiate", "NegotiateWithImplicitCredential")]
+        [System.Management.Automation.Runspaces.AuthenticationMechanism] $Authentication = "Default",
+        [Parameter(ParameterSetName = "FromContainer", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromId", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FromName", Mandatory = $false)]
         [switch] $Force
     )
 
@@ -92,11 +105,16 @@ function Control-DockerContainer
             try 
             {
                 $CurrentComputerName = $_
-                $Container | Where-Object { ($_.ComputerName -eq $CurrentComputerName) -and ($_.Status -eq $RequiredStatus) }
+                # $Container | Where-Object { ($_.ComputerName -eq $CurrentComputerName) -and ($_.Status -eq $RequiredStatus) }
                 $FilteredContainer = $Container | Where-Object { ($_.ComputerName -eq $CurrentComputerName) -and ($_.Status -ne $RequiredStatus) }
                 if ($FilteredContainer)
                 {
-                    $Control = Invoke-Command -ComputerName $CurrentComputerName -ScriptBlock { Invoke-Expression "docker $($using:Action) $($using:FilteredContainer.Id -join ' ')" }
+                    $Parameters = @{
+                        ComputerName = $CurrentComputerName
+                    }
+                    if ($PSBoundParameters.Credential) { $Parameters.Add("Credential", $Credential) }
+                    if ($PSBoundParameters.Authentication) { $Parameters.Add("Authentication", $Authentication) }
+                    $Control = Invoke-Command @Parameters -ScriptBlock { Invoke-Expression "docker $($using:Action) $($using:FilteredContainer.Id -join ' ')" }
                     Get-DockerContainer -Id $FilteredContainer.Id -ComputerName $CurrentComputerName
                 }
             }
