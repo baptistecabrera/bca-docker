@@ -15,7 +15,7 @@ PowerShell module to manage Docker containers.
 0.3.0:
 - Invoke-DockerContainerCommand:
   - Added support for ArgumentList parameter;
-  - Added AuthenticationOn parameterthat allows to specify whether to use Credential and Authentication paramaters on the host, container or both.
+  - Added AuthenticationOn parameter that allows to specify whether to use Credential and Authentication paramaters on the host, container or both.
 
 0.2.0:
 - Added ShouldProcess support on some functions;
