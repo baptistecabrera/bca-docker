@@ -5,7 +5,7 @@
     RootModule        = 'Bca.Docker'
 
     # Version number of this module.
-    ModuleVersion     = '0.2.0'
+    ModuleVersion     = '0.3.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -108,7 +108,12 @@
             IconUri      = 'https://www.powershellgallery.com/Content/Images/Branding/packageDefaultIcon.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = '0.2.0:
+            ReleaseNotes = '0.3.0:
+- Invoke-DockerContainerCommand:
+  - Added support for ArgumentList parameter;
+  - Added AuthenticationOn parameter that allows to specify whether to use Credential and Authentication paramaters on the host, container or both.
+
+0.2.0:
 - Added ShouldProcess support on some functions;
 - Added support for Authentication and Credential parameters.
 

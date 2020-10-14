@@ -32,15 +32,16 @@ trigger:
 
 resources:
   repositories:
-    - repository: build-tools
+    - repository: bca-cicd
       type: git
-      name: build-tools
+      name: bca-cicd
+      ref: refs/tags/1.1
 
 variables:
-- template: pipelines/azuredevops/variables/all.yml@build-tools
+- template: azuredevops/pipelines/variables/all.yml@bca-cicd
 
 stages: 
-- template: pipelines/azuredevops/pipeline-build-ps.yml@build-tools
+- template: azuredevops/pipelines/pipeline-build-ps.yml@bca-cicd
   parameters:
     psName: $(Build.DefinitionName)
     psType: Module

@@ -39,15 +39,16 @@ resources:
       branches:
       - master
   repositories:
-    - repository: build-tools
+    - repository: bca-cicd
       type: git
-      name: build-tools
+      name: bca-cicd
+      ref: refs/tags/1.1
 
 variables:
-- template: pipelines/azuredevops/variables/all.yml@build-tools
+- template: azuredevops/pipelines/variables/all.yml@bca-cicd
 
 stages: 
-- template: pipelines/azuredevops/pipeline-release-ps.yml@build-tools
+- template: azuredevops/pipelines/pipeline-release-ps.yml@bca-cicd
   parameters:
     psName: $(resources.pipeline.Build.pipelineName)
     artifactPath: $(Pipeline.Workspace)/Build/$(resources.pipeline.Build.pipelineName)-$(resources.pipeline.Build.runName)
