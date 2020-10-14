@@ -42,7 +42,7 @@ resources:
     - repository: bca-cicd
       type: git
       name: bca-cicd
-      ref: refs/tags/1.0
+      ref: refs/tags/1.1
 
 variables:
 - template: azuredevops/pipelines/variables/all.yml@bca-cicd
