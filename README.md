@@ -1,7 +1,7 @@
 # Bca.Docker
-![Platform](https://img.shields.io/powershellgallery/p/Bca.Docker?logo=powershell&logoColor=white) [![License](https://img.shields.io/github/license/baptistecabrera/bca-docker?logo=open-source-initiative&logoColor=white)](https://opensource.org/licenses/MIT) [![Tag](https://img.shields.io/github/v/tag/baptistecabrera/bca-docker?logo=github&logoColor=white&label=tag)](https://github.com/baptistecabrera/bca-docker/releases)
+![Platform](https://img.shields.io/powershellgallery/p/Bca.Docker?logo=powershell&logoColor=white) [![License](https://img.shields.io/github/license/baptistecabrera/bca-docker?logo=open-source-initiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/Bca.Docker?color=informational&logo=powershell&logoColor=white)](https://www.powershellgallery.com/packages/Bca.Docker) [![Nuget](https://img.shields.io/nuget/v/Bca.Docker?color=informational&logo=nuget&logoColor=white)](https://www.nuget.org/packages/Bca.Docker/) [![Chocolatey](https://img.shields.io/chocolatey/v/bca-docker?color=informational&logo=chocolatey&logoColor=white)](https://chocolatey.org/packages/bca-docker) [![GitHub](https://img.shields.io/badge/dynamic/json?url=https://304e1aad263a8b23b4e14ef1714e6a54a183a0a5@nuget.pkg.github.com/baptistecabrera/Bca.Docker/index.json&label=github&query=$.items[:1].upper&logo=github&logoColor=white)](https://www.github.com/baptistecabrera/bca-docker/packages/)
+[![Tag](https://img.shields.io/github/v/tag/baptistecabrera/bca-docker?logo=github&logoColor=white&label=tag)](https://github.com/baptistecabrera/bca-docker/releases) [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/Bca.Docker?color=informational&logo=powershell&logoColor=white)](https://www.powershellgallery.com/packages/Bca.Docker) [![Nuget](https://img.shields.io/nuget/v/Bca.Docker?color=informational&logo=nuget&logoColor=white)](https://www.nuget.org/packages/Bca.Docker/) [![Chocolatey](https://img.shields.io/chocolatey/v/bca-docker?color=informational&logo=chocolatey&logoColor=white)](https://chocolatey.org/packages/bca-docker)
 
 ## Description
 
@@ -73,4 +73,4 @@ The CI is an Azure DevOps build pipeline that will:
 
 The CD is an Azure DevOps release pipeline is trigerred that will:
 - In a **Prerelease** step, install both Chocolatey and Nuget packages from the private feed in a container, and run tests again. If tests are successful, the packages are promoted to `@Prerelease` view inside the private feed;
-- In a **Release** step, publish the packages to _[NuGet](https://www.nuget.org/)_ and _[Chocolatey](https://chocolatey.org/)_, and publish the module to _[PowerShell Gallery](https://www.powershellgallery.com/)_, then promote the packages to to `@Release` view inside the private feed.
+- In a **Release** step, publish the packages to _[NuGet](https://www.nuget.org/)_,  _[GitHub](https://github.com/orgs/baptistecabrera/packages)_ and _[Chocolatey](https://chocolatey.org/)_, and publish the module to _[PowerShell Gallery](https://www.powershellgallery.com/)_, then promote the packages to to `@Release` view inside the private feed.
