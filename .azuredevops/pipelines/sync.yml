@@ -15,15 +15,16 @@ resources:
       branches:
       - master
   repositories:
-    - repository: build-tools
+    - repository: bca-cicd
       type: git
-      name: build-tools
+      name: bca-cicd
+      ref: refs/tags/1.1
 
 variables:
-- template: pipelines/azuredevops/variables/all.yml@build-tools
+- template: azuredevops/pipelines/variables/all.yml@bca-cicd
 
 
 stages: 
-- template: pipelines/azuredevops/pipeline-sync-repo.yml@build-tools
+- template: azuredevops/pipelines/pipeline-sync-repo.yml@bca-cicd
   parameters:
     syncGitHub: ${{ parameters.syncGitHub }}

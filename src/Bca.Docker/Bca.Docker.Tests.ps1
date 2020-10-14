@@ -269,7 +269,7 @@ Describe $global:TestLocalizedData.InvokeCommand.Describe {
     It $global:TestLocalizedData.InvokeCommand.FromIdExpression {
         try
         {
-            Invoke-DockerContainerCommand -ContainerId $FullId -ComputerName $Server -Expression "Write-Host 'Test'" -Credential $Credential -WhatIf
+            Invoke-DockerContainerCommand -ContainerId $FullId -ComputerName $Server -Expression "Write-Host 'Test'" -Credential $Credential -AuthenticationOn Host -WhatIf
             $Result = $true
         }
         catch { $Result = $false }
@@ -279,7 +279,7 @@ Describe $global:TestLocalizedData.InvokeCommand.Describe {
     It $global:TestLocalizedData.InvokeCommand.FromIdScript {
         try
         {
-            Invoke-DockerContainerCommand -ContainerId $FullId -ComputerName $Server -FilePath $ScriptPath -Credential $Credential -Authentication "Default" -WhatIf
+            Invoke-DockerContainerCommand -ContainerId $FullId -ComputerName $Server -FilePath $ScriptPath -Credential $Credential -Authentication "Default" -AuthenticationOn Container -WhatIf
             $Result = $true
         }
         catch { $Result = $false }
@@ -289,7 +289,7 @@ Describe $global:TestLocalizedData.InvokeCommand.Describe {
     It $global:TestLocalizedData.InvokeCommand.FromIdExpression {
         try
         {
-            Invoke-DockerContainerCommand -ContainerId $Id -ComputerName $Server -Expression "Write-Host 'Test'" -Credential $Credential -WhatIf -ErrorAction Stop
+            Invoke-DockerContainerCommand -ContainerId $Id -ComputerName $Server -Expression "Write-Host 'Test'" -Credential $Credential -AuthenticationOn Host, Container -WhatIf -ErrorAction Stop
             $Result = $true
         }
         catch { $Result = $false }
